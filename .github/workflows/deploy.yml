@@ -1,0 +1,80 @@
+# Deploy the creator page to GitHub Pages at rnvizion.dev/live
+# Drop in at: .github/workflows/deploy.yml (in the `live` repo)
+# One-time setup: repo Settings → Pages → Source: GitHub Actions
+# Action versions current as of July 2026; verify at build if drift bites.
+
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the page
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Checkout the brand engine (public; no token needed)
+        uses: actions/checkout@v4
+        with:
+          repository: RNVizion/rnv-brand
+          path: rnv-brand
+
+      - name: Emit brand tokens (import, never hardcode)
+        run: |
+          mkdir -p src/styles
+          python3 rnv-brand/engine/brand.py --css web > src/styles/tokens.css
+
+      - name: Guard — hex literals live only in tokens.css
+        # Anchors like href="#abc" can false-positive; tune if it bites.
+        run: |
+          hits=$(grep -rnE '#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b' src \
+            --include='*.astro' --include='*.css' --include='*.jsx' \
+            --include='*.tsx' --include='*.ts' --include='*.js' \
+            | grep -v 'src/styles/tokens.css' || true)
+          if [ -n "$hits" ]; then
+            echo "$hits"
+            echo "Hex found outside tokens.css; use the tokens."
+            exit 1
+          fi
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install and build (base '/live' comes from astro.config.mjs)
+        run: |
+          npm ci
+          npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
