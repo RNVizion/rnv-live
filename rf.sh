@@ -1,48 +1,48 @@
-python3 << 'PYEOF'
-from pathlib import Path
-p = Path('src/pages/index.astro')
-s = p.read_text()
-before = s
+mkdir -p src/content/items public/items && cat > src/content.config.ts << 'CFGEOF'
+import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
 
-s = s.replace(
-    '<span class="pillar-desc">Tools, engines, and MCP servers, built in public.</span>',
-    '<span class="pillar-desc">Crafting a thought.</span>'
-)
-s = s.replace(
-    '<span class="pillar-desc">Essays on building with intention.</span>',
-    '<span class="pillar-desc">A moment of thought.</span>'
-)
-s = s.replace(
-    '''<a href="https://huggingface.co/RNVizion">
-            <span class="pillar-title">Making</span>
-            <span class="pillar-desc">Live demos and models on Hugging Face.</span>
-          </a>''',
-    '''<a href="https://www.instagram.com/chris_the.o.o.o/">
-            <span class="pillar-title">Making</span>
-            <span class="pillar-desc">Thought in motion.</span>
-          </a>'''
-)
-s = s.replace(
-    '''<a href="https://www.instagram.com/chris_the.o.o.o/">
-            <span class="pillar-title">Fashion</span>
-            <span class="pillar-desc">The render-to-reality lane.</span>
-          </a>''',
-    '''<a href="https://www.instagram.com/rnv_apparel/">
-            <span class="pillar-title">Fashion</span>
-            <span class="pillar-desc">From render to reality.</span>
-          </a>'''
-)
+// Shop items. One markdown file per item in src/content/items/.
+// Files starting with _ are ignored (templates, drafts).
+const items = defineCollection({
+  loader: glob({ pattern: '**/[^_]*.md', base: './src/content/items' }),
+  schema: z.object({
+    kind: z.enum(['card', 'apparel', 'other']),
+    title: z.string(),
+    set: z.string().optional(),
+    number: z.string().optional(),
+    grade: z.string().optional(),
+    cert_no: z.string().optional(),
+    detail: z.string().optional(),
+    price_usd: z.number(),
+    status: z.enum(['available', 'pending', 'sold']),
+    sold_on: z.coerce.date().optional(),
+    stripe_url: z.string().url().optional(),
+    images: z.array(z.string()).default([]),
+    origin_on: z.coerce.date().optional(),
+    origin_url: z.string().url().optional(),
+  }),
+});
 
-assert s != before and s.count('rnv_apparel') == 1, 'replacement check failed'
-p.write_text(s)
-print('patched')
-PYEOF
-
-sed -i 's|From render to reality.|A thought you can wear.|' src/pages/index.astro
-
-
-git add -A && git commit -m "pillars: thought motif + link retargets" 
-
-git commit -m "fashion pillar: a thought you can wear" 
-
-git push
+export const collections = { items };
+CFGEOF
+cat > src/content/items/_template.md << 'TPLEOF'
+---
+kind: card
+title: Example Card Name
+set: Example Set
+number: "EX-001"
+grade: raw
+price_usd: 25
+status: available
+stripe_url: https://buy.stripe.com/test_replace_me
+images:
+  - items/example-front.jpg
+origin_on: 2026-11-01
+origin_url: https://www.twitch.tv/videos/replace_me
+---
+Copy this file, drop the leading underscore from the name, and fill it in.
+Underscore files never render. Images live in public/items/.
+For apparel: kind: apparel, use detail (size, materials) instead of set/number/grade.
+TPLEOF
+echo "content model in place"
