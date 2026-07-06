@@ -41,4 +41,8 @@ PYEOF
 sed -i 's|From render to reality.|A thought you can wear.|' src/pages/index.astro
 
 
-git add -A && git commit -m "pillars: thought motif + link retargets" && commit -m "fashion pillar: a thought you can wear" && git push
+git add -A && git commit -m "pillars: thought motif + link retargets" 
+
+git commit -m "fashion pillar: a thought you can wear" 
+
+git push
