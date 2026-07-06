@@ -1,0 +1,205 @@
+npm install @fontsource/bricolage-grotesque @fontsource/jetbrains-mono @fontsource/instrument-serif
+
+cat > src/pages/index.astro << 'PAGEEOF'
+---
+import '../styles/tokens.css';
+import '@fontsource/bricolage-grotesque/400.css';
+import '@fontsource/bricolage-grotesque/600.css';
+import '@fontsource/bricolage-grotesque/700.css';
+import '@fontsource/jetbrains-mono/400.css';
+import '@fontsource/jetbrains-mono/700.css';
+import '@fontsource/instrument-serif/400-italic.css';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="The RNVizion creator page: portfolio, shop, and live." />
+    <title>RNVizion · live</title>
+  </head>
+  <body>
+    <div class="page">
+      <header>
+        <span class="wordmark">RNVizion</span>
+        <span class="pill"><span class="dot"></span>OFFLINE</span>
+      </header>
+
+      <section class="hero">
+        <p class="kicker">LIVE</p>
+        <h1>Offline right now.</h1>
+        <p class="dek">Gaming, card rips, and the build itself; the first stream lands here.</p>
+        <p class="meta">SCHEDULE ARRIVES WITH THE FIRST STREAM</p>
+      </section>
+
+      <section>
+        <p class="kicker">SHOP</p>
+        <h2>The shop opens soon.</h2>
+        <p class="dek">Every card sold here will tie to the moment it was pulled on camera.</p>
+      </section>
+
+      <section>
+        <p class="kicker">THE WORK</p>
+        <nav class="pillars">
+          <a href="https://github.com/RNVizion">
+            <span class="pillar-title">Development</span>
+            <span class="pillar-desc">Tools, engines, and MCP servers, built in public.</span>
+          </a>
+          <a href="https://rnvizion.dev">
+            <span class="pillar-title">Philosophy</span>
+            <span class="pillar-desc">Essays on building with intention.</span>
+          </a>
+          <a href="https://huggingface.co/RNVizion">
+            <span class="pillar-title">Making</span>
+            <span class="pillar-desc">Live demos and models on Hugging Face.</span>
+          </a>
+          <a href="https://instagram.com/Chris_The_O.O.O">
+            <span class="pillar-title">Fashion</span>
+            <span class="pillar-desc">The render-to-reality lane.</span>
+          </a>
+        </nav>
+      </section>
+
+      <footer>
+        <p class="socials">
+          <a href="https://github.com/RNVizion">GitHub</a> ·
+          <a href="https://huggingface.co/RNVizion">Hugging Face</a> ·
+          <a href="https://instagram.com/Chris_The_O.O.O">Instagram</a> ·
+          <a href="https://rnvizion.dev">Blog</a>
+        </p>
+        <p class="fine">RNVizion · Research N’ Vizion<br />© 2026 · All rights reserved.</p>
+      </footer>
+    </div>
+  </body>
+</html>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--rnv-bg-0);
+    color: var(--rnv-text);
+    font-family: var(--rnv-font-body), system-ui, sans-serif;
+    line-height: 1.6;
+  }
+  .page {
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 4rem;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 0 1.5rem;
+    border-bottom: 1px solid var(--rnv-rule);
+  }
+  .wordmark {
+    font-family: var(--rnv-font-mono), ui-monospace, monospace;
+    font-weight: 700;
+    color: var(--rnv-gold);
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--rnv-font-mono), ui-monospace, monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    color: var(--rnv-text-dim);
+    border: 1px solid var(--rnv-border);
+    border-radius: 999px;
+    padding: 0.3rem 0.75rem;
+  }
+  .dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--rnv-text-faint);
+  }
+  section { padding: 2.75rem 0 0; }
+  .kicker {
+    font-family: var(--rnv-font-mono), ui-monospace, monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.28em;
+    color: var(--rnv-gold);
+    margin: 0 0 0.75rem;
+  }
+  h1, h2 {
+    font-family: var(--rnv-font-display), system-ui, sans-serif;
+    font-weight: 700;
+    margin: 0 0 0.6rem;
+    line-height: 1.15;
+  }
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.5rem; }
+  .dek {
+    font-family: var(--rnv-font-serif-italic), Georgia, serif;
+    font-style: italic;
+    color: var(--rnv-gold);
+    font-size: 1.1rem;
+    margin: 0;
+  }
+  .meta {
+    font-family: var(--rnv-font-mono), ui-monospace, monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    color: var(--rnv-text-faint);
+    margin: 1.4rem 0 0;
+  }
+  .pillars { display: flex; flex-direction: column; }
+  .pillars a {
+    display: block;
+    padding: 1rem 0.25rem;
+    border-bottom: 1px solid var(--rnv-rule);
+    text-decoration: none;
+  }
+  .pillars a:first-child { border-top: 1px solid var(--rnv-rule); }
+  .pillar-title {
+    display: block;
+    font-family: var(--rnv-font-display), system-ui, sans-serif;
+    font-weight: 600;
+    color: var(--rnv-text);
+  }
+  .pillar-desc {
+    display: block;
+    color: var(--rnv-text-dim);
+    font-size: 0.92rem;
+  }
+  .pillars a:hover .pillar-title { color: var(--rnv-gold); }
+  footer { padding: 3.5rem 0 0; }
+  .socials {
+    font-family: var(--rnv-font-mono), ui-monospace, monospace;
+    font-size: 0.8rem;
+    margin: 0 0 1.25rem;
+    color: var(--rnv-text-faint);
+  }
+  .socials a { color: var(--rnv-text-dim); text-decoration: none; }
+  .socials a:hover { color: var(--rnv-gold); }
+  .fine {
+    font-family: var(--rnv-font-mono), ui-monospace, monospace;
+    font-size: 0.68rem;
+    line-height: 1.9;
+    letter-spacing: 0.08em;
+    color: var(--rnv-text-faint);
+    border-top: 1px solid var(--rnv-rule);
+    padding-top: 1.25rem;
+    margin: 0;
+  }
+  a:focus-visible {
+    outline: 2px solid var(--rnv-gold);
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .dot { animation: breathe 3s ease-in-out infinite; }
+    @keyframes breathe {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+  }
+</style>
+PAGEEOF
+
+git add -A && git commit -m "w1: structure + brand fonts" && git push
