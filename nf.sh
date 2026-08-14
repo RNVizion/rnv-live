@@ -99,7 +99,7 @@ s = s.replace(
     .grid { grid-template-columns: 1fr 1fr; }
   }
   .item {
-    background: var(--rnv-bg-1);
+    background: var(--rnv-bg-2);
     border: 1px solid var(--rnv-border-soft);
     border-radius: 6px;
     padding: 1rem;
@@ -156,7 +156,7 @@ s = s.replace(
     padding: 0.6rem 0;
     border-radius: 4px;
     background: var(--rnv-gold);
-    color: var(--rnv-bg-0);
+    color: var(--rnv-bg);
     text-decoration: none;
   }
   .buy.soon {
