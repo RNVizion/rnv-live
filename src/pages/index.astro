@@ -130,7 +130,7 @@ const metaLine = (d) =>
   body {
     margin: 0;
     min-height: 100vh;
-    background: var(--rnv-bg-0);
+    background: var(--rnv-bg);
     color: var(--rnv-text);
     font-family: var(--rnv-font-body), system-ui, sans-serif;
     line-height: 1.6;
@@ -171,8 +171,17 @@ const metaLine = (d) =>
     width: 0.45rem;
     height: 0.45rem;
     border-radius: 50%;
-    background: var(--rnv-text-faint);
+    background: var(--rnv-signal-offline);
+    /* box-shadow, not border: `* { box-sizing: border-box }` means a 1px border
+       would eat the 7.2px dot down to 5.2px of fill. This ring sits outside the
+       box and costs no layout. It is the thing carrying the WCAG 1.4.11 boundary
+       at 3:1 -- the fill deliberately does not, which is why it can be a deep
+       wine. Do not remove it to "simplify"; it is load-bearing. */
+    box-shadow: 0 0 0 1px var(--rnv-gold);
   }
+  /* Add `live` to the pill and change the label when the stream is up. Both, or
+     the colour is claiming something the word contradicts. */
+  .pill.live .dot { background: var(--rnv-signal-live); }
   section { padding: 2.75rem 0 0; }
   .kicker {
     font-family: var(--rnv-font-mono), ui-monospace, monospace;
@@ -252,7 +261,7 @@ const metaLine = (d) =>
     .grid { grid-template-columns: 1fr 1fr; }
   }
   .item {
-    background: var(--rnv-bg-1);
+    background: var(--rnv-bg-2);
     border: 1px solid var(--rnv-border-soft);
     border-radius: 6px;
     padding: 1rem;
@@ -309,7 +318,7 @@ const metaLine = (d) =>
     padding: 0.6rem 0;
     border-radius: 4px;
     background: var(--rnv-gold);
-    color: var(--rnv-bg-0);
+    color: var(--rnv-bg);
     text-decoration: none;
   }
   .buy.soon {
