@@ -167,21 +167,36 @@ const metaLine = (d) =>
     border-radius: 999px;
     padding: 0.3rem 0.75rem;
   }
+  /* Two elements on purpose. .dot is the ring -- static chrome. ::after is the
+     fill -- the state. Separating them is what lets the fill breathe while the
+     boundary holds still. Do not put the fill back on .dot to "simplify"; that
+     re-couples the ring to the animation and re-imposes a floor on the keyframe. */
   .dot {
+    position: relative;
     width: 0.45rem;
     height: 0.45rem;
     border-radius: 50%;
-    background: var(--rnv-signal-offline);
+    background: transparent;
     /* box-shadow, not border: `* { box-sizing: border-box }` means a 1px border
        would eat the 7.2px dot down to 5.2px of fill. This ring sits outside the
        box and costs no layout. It is the thing carrying the WCAG 1.4.11 boundary
-       at 3:1 -- the fill deliberately does not, which is why it can be a deep
-       wine. Do not remove it to "simplify"; it is load-bearing. */
+       -- 10.68:1 on --rnv-bg, and since 2026-08-14 it does not dim, so it holds
+       at every frame. The fill deliberately does not carry it, which is why it
+       can be a deep wine. Do not remove it to "simplify"; it is load-bearing.
+       1px is the floor: sub-pixel rings vanish on a 1x display. */
     box-shadow: 0 0 0 1px var(--rnv-gold);
   }
+  .dot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--rnv-signal-offline);
+  }
   /* Add `live` to the pill and change the label when the stream is up. Both, or
-     the colour is claiming something the word contradicts. */
-  .pill.live .dot { background: var(--rnv-signal-live); }
+     the colour is claiming something the word contradicts. The state lives on
+     ::after now, with the fill -- not on .dot, which is only the ring. */
+  .pill.live .dot::after { background: var(--rnv-signal-live); }
   section { padding: 2.75rem 0 0; }
   .kicker {
     font-family: var(--rnv-font-mono), ui-monospace, monospace;
@@ -331,7 +346,12 @@ const metaLine = (d) =>
     outline-offset: 3px;
   }
   @media (prefers-reduced-motion: no-preference) {
-    .dot { animation: breathe 3s ease-in-out infinite; }
+    /* On the fill, not the dot. The 0.5 dip used to be a floor -- the ring
+       animated too, and dipping further put it under the 3:1 UI minimum. The
+       ring no longer animates, so 0.5 is now an aesthetic choice held in common
+       with rnvizion.dev rather than a constraint. Change it here and there
+       together, or the two dots stop reading as one mark. */
+    .dot::after { animation: breathe 3s ease-in-out infinite; }
     @keyframes breathe {
       0%, 100% { opacity: 0.5; }
       50% { opacity: 1; }
