@@ -176,15 +176,30 @@ const metaLine = (d) =>
     width: 0.45rem;
     height: 0.45rem;
     border-radius: 50%;
+    /* .pill is a flex container and flex-shrink defaults to 1, so without this
+       the dot is squeezed on the main axis while its height stays pinned -- a
+       circle becomes an ellipse and the ring traces the distortion. That is not
+       hypothetical: it was live on rnvizion.dev's hero dot at every viewport
+       width, unnoticed because everyone was looking at the colour. */
+    flex-shrink: 0;
     background: transparent;
-    /* box-shadow, not border: `* { box-sizing: border-box }` means a 1px border
-       would eat the 7.2px dot down to 5.2px of fill. This ring sits outside the
-       box and costs no layout. It is the thing carrying the WCAG 1.4.11 boundary
-       -- 10.68:1 on --rnv-bg, and since 2026-08-14 it does not dim, so it holds
-       at every frame. The fill deliberately does not carry it, which is why it
-       can be a deep wine. Do not remove it to "simplify"; it is load-bearing.
-       1px is the floor: sub-pixel rings vanish on a 1x display. */
-    box-shadow: 0 0 0 1px var(--rnv-gold);
+    /* box-shadow, not border: `* { box-sizing: border-box }` means a border
+       would eat into the 7.2px dot rather than sitting outside it. This ring
+       costs no layout, and it is the thing carrying the WCAG 1.4.11 boundary --
+       since 2026-08-14 it does not dim, so it holds at every frame. The fill
+       deliberately does not carry it, which is why it can be a deep wine. Do
+       not remove it to "simplify"; it is load-bearing.
+
+       0.75px, matching rnvizion.dev, and the match is the point: the two dots
+       read as one mark across two mediums, which is what licenses a fill under
+       the floor. Sub-pixel spread antialiases rather than vanishing, and partial
+       coverage costs contrast in proportion -- 6.27:1 here on --rnv-bg, 6.09:1
+       on the site's --bg-2, both roughly 2x the 3:1 minimum. 0.5px was rejected
+       at ~3.35:1, a bare pass with no margin.
+
+       [confirm/fill] Unverified below 3x. If the ring reads absent rather than
+       finer on a 1x display, revert BOTH surfaces to 1px in one pass. */
+    box-shadow: 0 0 0 0.75px var(--rnv-gold);
   }
   .dot::after {
     content: "";
