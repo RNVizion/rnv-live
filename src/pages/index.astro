@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import '../styles/tokens.css';
+import '@fontsource/montserrat/900.css';
 import '@fontsource/bricolage-grotesque/400.css';
 import '@fontsource/bricolage-grotesque/600.css';
 import '@fontsource/bricolage-grotesque/700.css';
@@ -148,11 +149,26 @@ const metaLine = (d) =>
     border-bottom: 1px solid var(--rnv-rule);
   }
   .wordmark {
-    font-family: var(--rnv-font-mono), ui-monospace, monospace;
-    font-weight: 700;
+    /* THE MARK, and it must be the mark face. Decision #15 retired the wordmark
+       from JetBrains Mono; this rule drew it in mono at 700 with 0.02em until
+       2026-08-16, so the same wordmark rendered in two different faces
+       depending on which surface someone reached first.
+
+       Three coupled changes, and the import is the one that is easy to miss:
+       --rnv-font-mark is a NAME emitted by engine/brand.py, not a face. Without
+       the @fontsource import above it resolves to a family the browser does not
+       have and falls through to system-ui, which looks like a fix and is not.
+
+       Tracking is the nav value 0.09em, not the 0.02em this carried. This is a
+       nav mark by role -- header, beside the status pill, same job as the site's
+       .logo -- and the web system is relative, so the em value travels and the
+       absolute gap follows the size: 1.51px here at 1.05rem against 1.26px on
+       the site's 14px nav. Same rule, different size, different pixel count. */
+    font-family: var(--rnv-font-mark), system-ui, sans-serif;
+    font-weight: 900;
     color: var(--rnv-gold);
     font-size: 1.05rem;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.09em;
   }
   .pill {
     text-decoration: none;
